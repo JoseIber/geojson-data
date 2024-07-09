@@ -21,23 +21,28 @@
 
     var markers = L.markerClusterGroup();
 
-    fetch('https://JoseIber.github.io/geojson-data/data.geojson')
-      .then(response => response.json())
-      .then(data => {
-        console.log("GeoJSON data loaded:", data);
-        var geoJsonLayer = L.geoJSON(data, {
-          onEachFeature: function (feature, layer) {
-            if (feature.properties) {
-              layer.bindPopup(Object.keys(feature.properties).map(function (k) {
-                return k + ": " + feature.properties[k];
-              }).join("<br />"), {maxHeight: 200});
+    function loadGeoJson() {
+      fetch('https://JoseIber.github.io/geojson-data/data.geojson')
+        .then(response => response.json())
+        .then(data => {
+          console.log("GeoJSON data loaded:", data);
+          var geoJsonLayer = L.geoJSON(data, {
+            onEachFeature: function (feature, layer) {
+              if (feature.properties) {
+                layer.bindPopup(Object.keys(feature.properties).map(function (k) {
+                  return k + ": " + feature.properties[k];
+                }).join("<br />"), {maxHeight: 200});
+              }
             }
-          }
-        });
-        markers.addLayer(geoJsonLayer);
-        map.addLayer(markers);
-      })
-      .catch(error => console.log('Error cargando GeoJSON: ', error));
+          });
+          markers.addLayer(geoJsonLayer);
+          map.addLayer(markers);
+        })
+        .catch(error => console.log('Error cargando GeoJSON: ', error));
+    }
+
+    map.on('moveend', loadGeoJson);
+    loadGeoJson();  // Cargar los datos iniciales
   </script>
 </body>
 </html>

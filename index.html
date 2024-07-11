@@ -53,9 +53,15 @@
                 'Ó': '&Oacute;',
                 'Ú': '&Uacute;',
                 'ñ': '&ntilde;',
-                'Ñ': '&Ntilde;'
+                'Ñ': '&Ntilde;',
+                'ü': '&uuml;',
+                'Ü': '&Uuml;',
+                'ç': '&ccedil;',
+                'Ç': '&Ccedil;',
+                '¡': '&iexcl;',
+                '¿': '&iquest;'
             };
-            return text.replace(/[&<>"'áéíóúÁÉÍÓÚñÑ]/g, function(m) { return map[m]; });
+            return text.replace(/[&<>"'áéíóúÁÉÍÓÚñÑüÜçÇ¡¿]/g, function(m) { return map[m]; });
         }
 
         // Cargar el archivo GeoJSON y añadirlo al mapa

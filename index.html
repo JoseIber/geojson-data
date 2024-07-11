@@ -34,6 +34,30 @@
             return text.replace(urlPattern, '<a href="$1" target="_blank">$1</a>');
         }
 
+        // Función para escapar caracteres especiales en HTML
+        function escapeHtml(text) {
+            var map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;',
+                'á': '&aacute;',
+                'é': '&eacute;',
+                'í': '&iacute;',
+                'ó': '&oacute;',
+                'ú': '&uacute;',
+                'Á': '&Aacute;',
+                'É': '&Eacute;',
+                'Í': '&Iacute;',
+                'Ó': '&Oacute;',
+                'Ú': '&Uacute;',
+                'ñ': '&ntilde;',
+                'Ñ': '&Ntilde;'
+            };
+            return text.replace(/[&<>"'áéíóúÁÉÍÓÚñÑ]/g, function(m) { return map[m]; });
+        }
+
         // Cargar el archivo GeoJSON y añadirlo al mapa
         map.on('load', function () {
             fetch(geojsonUrl)
@@ -68,6 +92,7 @@
                         var description = '<h3>Información</h3><ul>';
                         for (var key in properties) {
                             var value = properties[key].toString();
+                            value = escapeHtml(value);
                             value = makeUrlsClickable(value);
                             description += '<li><strong>' + key + ':</strong> ' + value + '</li>';
                         }

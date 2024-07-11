@@ -20,11 +20,16 @@
         }).addTo(map);
 
         // URL del archivo GeoJSON en GitHub
-        var geojsonUrl = 'https://github.com/JoseIber/geojson-data/data.geojson';
+        var geojsonUrl = 'https://raw.githubusercontent.com/JoseIber/geojson-data/main/data.geojson';
 
         // Cargar el archivo GeoJSON y añadirlo al mapa
         fetch(geojsonUrl)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
             .then(data => {
                 L.geoJSON(data).addTo(map);
             })
@@ -32,3 +37,4 @@
     </script>
 </body>
 </html>
+

@@ -34,12 +34,6 @@
             return text.replace(urlPattern, '<a href="$1" target="_blank">$1</a>');
         }
 
-        // Función para detectar números de teléfono y convertirlos en enlaces "tel:"
-        function makePhonesCallable(text) {
-            var phonePattern = /(\+?\d[\d -]{8,}\d)/g;
-            return text.replace(phonePattern, '<a href="tel:$1">$1</a>');
-        }
-
         // Cargar el archivo GeoJSON y añadirlo al mapa
         map.on('load', function () {
             fetch(geojsonUrl)
@@ -75,7 +69,6 @@
                         for (var key in properties) {
                             var value = properties[key].toString();
                             value = makeUrlsClickable(value);
-                            value = makePhonesCallable(value);
                             description += '<li><strong>' + key + ':</strong> ' + value + '</li>';
                         }
                         description += '</ul>';

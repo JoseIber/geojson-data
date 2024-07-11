@@ -25,8 +25,8 @@
             zoom: 6 // Nivel de zoom inicial
         });
 
-        // URL del archivo GeoJSON en GitHub
-        var geojsonUrl = 'https://raw.githubusercontent.com/JoseIber/geojson-data/main/data.geojson'; // Reemplaza con la URL de tu archivo GeoJSON
+        // URL del archivo GeoJSON en GitHub (permiso raw)
+        var geojsonUrl = 'https://raw.githubusercontent.com/JoseIber/geojson-data/main/data.geojson'; // Reemplaza con la URL raw de tu archivo GeoJSON
 
         // Cargar el archivo GeoJSON y añadirlo al mapa
         map.on('load', function () {
@@ -51,6 +51,34 @@
                             'circle-radius': 5,
                             'circle-color': '#007cbf'
                         }
+                    });
+
+                    // Añadir eventos de click para los popups
+                    map.on('click', 'geojson-layer', function (e) {
+                        var coordinates = e.features[0].geometry.coordinates.slice();
+                        var properties = e.features[0].properties;
+                        
+                        // Formatear las propiedades como HTML
+                        var description = '<h3>Información</h3><ul>';
+                        for (var key in properties) {
+                            description += '<li><strong>' + key + ':</strong> ' + properties[key] + '</li>';
+                        }
+                        description += '</ul>';
+
+                        new mapboxgl.Popup()
+                            .setLngLat(coordinates)
+                            .setHTML(description)
+                            .addTo(map);
+                    });
+
+                    // Cambiar el cursor a pointer cuando el mouse pasa sobre los puntos
+                    map.on('mouseenter', 'geojson-layer', function () {
+                        map.getCanvas().style.cursor = 'pointer';
+                    });
+
+                    // Volver al cursor por defecto cuando el mouse sale de los puntos
+                    map.on('mouseleave', 'geojson-layer', function () {
+                        map.getCanvas().style.cursor = '';
                     });
                 })
                 .catch(error => console.error('Error cargando el archivo GeoJSON:', error));

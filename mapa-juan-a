@@ -20,7 +20,7 @@
         }).addTo(map);
 
         // URL del archivo GeoJSON en GitHub
-        var geojsonUrl = 'https://github.com/JoseIber/geojson-data/blob/main/data.geojson';
+        var geojsonUrl = 'https://github.com/JoseIber/geojson-data/data.geojson';
 
         // Cargar el archivo GeoJSON y añadirlo al mapa
         fetch(geojsonUrl)

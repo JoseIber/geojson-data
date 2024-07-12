@@ -167,15 +167,19 @@
                     var checkboxes = document.querySelectorAll('#controls input[type="checkbox"]');
                     checkboxes.forEach(function(checkbox) {
                         checkbox.addEventListener('change', function() {
-                            var etapaFilters = ['in', ['get', 'Etapa del ciclo de vida']];
-                            var inactivoFilter = ['!=', ['get', 'Inactivo'], 'Sí'];
+                            var etapaFilters = ['in', 'Etapa del ciclo de vida'];
                             checkboxes.forEach(function(checkbox) {
                                 if (checkbox.checked && checkbox.value !== 'Inactivo') etapaFilters.push(checkbox.value);
                             });
+
+                            var filter;
                             if (document.getElementById('inactivo').checked) {
-                                inactivoFilter = ['==', ['get', 'Inactivo'], 'Sí'];
+                                filter = ['all', etapaFilters, ['==', ['get', 'Inactivo'], 'Sí']];
+                            } else {
+                                filter = ['all', etapaFilters, ['any', ['!=', ['get', 'Inactivo'], 'Sí'], ['!has', 'Inactivo']]];
                             }
-                            map.setFilter('geojson-layer', ['all', etapaFilters, inactivoFilter]);
+
+                            map.setFilter('geojson-layer', filter);
                         });
                     });
                 })
@@ -184,4 +188,5 @@
     </script>
 </body>
 </html>
+
 

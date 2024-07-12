@@ -79,13 +79,28 @@
                         'data': data
                     });
 
+                    // Añadir el layer con colores según la propiedad "Etapa del ciclo de vida"
                     map.addLayer({
                         'id': 'geojson-layer',
                         'type': 'circle',
                         'source': 'geojson-data',
                         'paint': {
                             'circle-radius': 5,
-                            'circle-color': '#007cbf'
+                            'circle-color': [
+                                'match',
+                                ['get', 'Etapa del ciclo de vida'],
+                                'Otra', '#4B4B4B',          // Gris oscuro
+                                'Suscriptor', '#FFC0CB',   // Rosa
+                                'Lead', '#D3D3D3',         // Gris claro
+                                'BBDD', '#FFFF00',         // Amarillo
+                                'Lead calificado por marketing', '#0000FF', // Azul
+                                'Lead calificado por ventas', '#008000',    // Verde
+                                'Análisis', '#FFA500',      // Naranja
+                                'Cliente', '#EE82EE',       // Violeta
+                                'Antiguo cliente', '#FF0000', // Rojo
+                                'No Go', '#000000',         // Negro
+                                /* other */ '#FFFFFF'        // Blanco para cualquier otro valor
+                            ]
                         }
                     });
 
@@ -93,7 +108,7 @@
                     map.on('click', 'geojson-layer', function (e) {
                         var coordinates = e.features[0].geometry.coordinates.slice();
                         var properties = e.features[0].properties;
-                        
+
                         // Formatear las propiedades como HTML
                         var description = '<h3>Información</h3><ul>';
                         for (var key in properties) {

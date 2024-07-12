@@ -167,7 +167,7 @@
                     var checkboxes = document.querySelectorAll('#controls input[type="checkbox"]');
                     checkboxes.forEach(function(checkbox) {
                         checkbox.addEventListener('change', function() {
-                            var etapaFilters = ['in', 'Etapa del ciclo de vida'];
+                            var etapaFilters = ['in', ['get', 'Etapa del ciclo de vida']];
                             var inactivoFilter = ['!=', ['get', 'Inactivo'], 'Sí'];
                             checkboxes.forEach(function(checkbox) {
                                 if (checkbox.checked && checkbox.value !== 'Inactivo') etapaFilters.push(checkbox.value);
@@ -184,3 +184,4 @@
     </script>
 </body>
 </html>
+

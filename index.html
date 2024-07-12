@@ -9,10 +9,36 @@
     <style>
         body { margin: 0; padding: 0; }
         #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        #controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        }
+        #controls label {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <div id='map'></div>
+    <div id="controls">
+        <h3>Filtros</h3>
+        <label><input type="checkbox" value="Otra" checked> Otra</label>
+        <label><input type="checkbox" value="Suscriptor" checked> Suscriptor</label>
+        <label><input type="checkbox" value="Lead" checked> Lead</label>
+        <label><input type="checkbox" value="BBDD" checked> BBDD</label>
+        <label><input type="checkbox" value="Lead calificado por marketing" checked> Lead calificado por marketing</label>
+        <label><input type="checkbox" value="Lead calificado por ventas" checked> Lead calificado por ventas</label>
+        <label><input type="checkbox" value="Análisis" checked> Análisis</label>
+        <label><input type="checkbox" value="Cliente" checked> Cliente</label>
+        <label><input type="checkbox" value="Antiguo cliente" checked> Antiguo cliente</label>
+        <label><input type="checkbox" value="No Go" checked> No Go</label>
+        <label><input type="checkbox" id="inactivo" value="Inactivo"> Inactivo</label>
+    </div>
     <script>
         // Tu token de acceso de Mapbox
         mapboxgl.accessToken = 'pk.eyJ1Ijoiam9sdTc2IiwiYSI6ImNseWVqeHhmZDAxeGQybHMxMmxvc2N5OHUifQ.8U0xOQS-I2WkQ0MA5SF6RQ';
@@ -133,6 +159,22 @@
                     // Volver al cursor por defecto cuando el mouse sale de los puntos
                     map.on('mouseleave', 'geojson-layer', function () {
                         map.getCanvas().style.cursor = '';
+                    });
+
+                    // Añadir filtros
+                    var checkboxes = document.querySelectorAll('#controls input[type="checkbox"]');
+                    checkboxes.forEach(function(checkbox) {
+                        checkbox.addEventListener('change', function() {
+                            var etapaFilters = ['in', 'Etapa del ciclo de vida'];
+                            var inactivoFilter = ['!=', ['get', 'Inactivo'], 'Sí'];
+                            checkboxes.forEach(function(checkbox) {
+                                if (checkbox.checked && checkbox.value !== 'Inactivo') etapaFilters.push(checkbox.value);
+                            });
+                            if (document.getElementById('inactivo').checked) {
+                                inactivoFilter = ['==', ['get', 'Inactivo'], 'Sí'];
+                            }
+                            map.setFilter('geojson-layer', ['all', etapaFilters, inactivoFilter]);
+                        });
                     });
                 })
                 .catch(error => console.error('Error cargando el archivo GeoJSON:', error));
